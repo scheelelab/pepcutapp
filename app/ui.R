@@ -101,7 +101,7 @@ ui <- fluidPage(theme = shinytheme("darkly"),
 				column(1),
 				column(10, align = "center",
 					hr(),
-					h4("Data table - click on proteases and then 'SLICE IT UP!':"),
+					h4("Data table - use all or click on desired proteases - then 'SLICE IT UP!':"),
 					div(style = "overflow-y: auto; overflow-x: auto;",
 						DT::dataTableOutput("outtab")
 					)
