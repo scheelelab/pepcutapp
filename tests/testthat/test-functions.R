@@ -77,3 +77,15 @@ test_that("search_table ignores peptides that are not in the protein", {
     )
     expect_equal(result$Peptide, "DEF")
 })
+
+test_that("search_table returns an empty table when no peptide is found", {
+    result <- NULL
+    app$env$search_table(
+        input    = list(search = "ZZZ,YYY"),
+        dfx      = function() enzyme_df(),
+        seqx     = function() "ABCDEFGHIJ",
+        searchdf = function(x) result <<- x
+    )
+    expect_equal(nrow(result), 0)
+    expect_equal(colnames(result), c("Peptide", "Start", "End", "Start_Enzymes", "End_enzymes"))
+})

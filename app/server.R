@@ -84,6 +84,11 @@ search_table <- function(input, dfx, seqx, searchdf) {
 		
 		# combing result to table
 		df <- do.call( rbind, lapply(names(xx), FUN=function(x) { if (dim(xx[[x]])[[1]] > 0) { d <- data.frame(xx[[x]]); d[["Peptide"]] <- x; return(d) }  } ) )
+		# none of the peptides were found
+		if (is.null(df)) {
+			searchdf( data.frame(Peptide = character(), Start = numeric(), End = numeric(), Start_Enzymes = character(), End_enzymes = character()) )
+			return(invisible(NULL))
+		}
 		df[["start"]] <- df[["start"]] - 1
 		df[["Start_Enzymes"]] <- apply(df["start"], MARGIN = 1, FUN = function(x) {paste(g[[as.character(x)]], collapse = ";")} )
 		df[["End_enzymes"]] <- apply(df["end"], MARGIN = 1, FUN = function(x) {paste(g[[as.character(x)]], collapse = ";")} )
