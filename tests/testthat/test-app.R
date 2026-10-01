@@ -28,7 +28,7 @@ test_that("READ DATA parses the protein and shows its length", {
     mock_shinyjs()
 
     shiny::testServer(app$server, {
-        suppressWarnings(session$setInputs(prot = "ABCDE 5\nFGHIJ 10", tab = enzyme_text, clicko = 1))
+        suppressWarnings(session$setInputs(prot = "1 ABCDE\n  6 FGHIJ", tab = enzyme_text, clicko = 1))
         # line numbers (GenBank style) are stripped from the pasted sequence
         expect_equal(seqx(), "ABCDEFGHIJ")
         expect_equal(output$out, "Length: 10\nABCDEFGHIJ")
