@@ -1,5 +1,5 @@
 # pepcutapp
-quick'n'dirty app to identify peptides based on PeptideCutter results
+R Shiny app to identify peptides based on PeptideCutter results
 
 
 A small Shiny app that takes a protein sequence and a PeptideCutter cleavage table, slices the protein at all combinations of cleavage sites and lets you search for known peptides to see which enzymes could have produced them.
