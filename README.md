@@ -34,3 +34,6 @@ Rscript tests/testthat.R
 ```
 
 They run automatically on every push and pull request through GitHub Actions (R 4.5.2).
+
+Check out the app [Here!](https://cphbat.shinyapps.io/pepcut/)
+
