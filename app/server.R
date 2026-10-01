@@ -2,20 +2,18 @@
 make_table <- function(seqx, input, dfx, cutdf) {
 		
 			lns <- nchar(seqx())
-			
 			if (is.null(input$outtab_rows_selected)) { 
 				charcl <- stringr::str_split(dfx()[[3]], " ")
-				# getiing information on desired ezymes
-				charcl <- lapply(charcl, FUN = function(x) { c( 1, as.numeric(x), lns) } )
+				# getting information on desired ezymes
+				charcl <- lapply(charcl, FUN = function(x) { as.numeric(x) } )
 				names(charcl) <- dfx()[[1]]
 				
 			} else {
-				charcl <- stringr::str_split(dfx()[[3]][input$outtab_rows_selected], " ")
-				# getiing information on desired ezymes
-				charcl <- lapply(charcl, FUN = function(x) { c( 1, as.numeric(x), lns) } )
-				names(charcl) <- dfx()[[1]][input$outtab_rows_selected]
+				charcl <- stringr::str_split(dfx()[[3]][ unique(c(1,2,input$outtab_rows_selected)) ] , " ")
+				# getting information on desired ezymes
+				charcl <- lapply(charcl, FUN = function(x) { as.numeric(x) } )
+				names(charcl) <- dfx()[[1]][unique(c(1,2,input$outtab_rows_selected))]
 			}
-			
 			# making a cleavage-site-to-enzyme lookup dict
 			g <- list()
 			for (i in names(charcl) ) { for (ii in as.character(charcl[[i]])) {if (ii %in% names(g)) {g[[ii]] <- c(g[[ii]], i) } else { g[[ii]] <- i }  } }
@@ -26,20 +24,20 @@ make_table <- function(seqx, input, dfx, cutdf) {
 			out <- data.frame( do.call( rbind, lapply(1:dim(lst)[[2]], FUN=function(x) {	start <- lst[,x][[1]]
 														end <- lst[,x][[2]]
 														
-														if ( start == 1 & end == lns) {
+														#if ( start == 1 & end == lns) {
 														
-															return( NULL) 
+														#	return( NULL) 
 														
-														} else {
+														#} else {
 														
 															c(
-																substr(seqx(), start, end )  ,
+																substr(seqx(), start+1, end )  ,
 																start,
 																end,
 																paste( g[[as.character(start)]], collapse=";" ),
 																paste( g[[as.character(end)]], collapse=";" )
 															)
-														}
+														#}
 					})))
 			# providing names I want
 			names(out) <- c("Peptide", "Start", "End", "Start_Enzymes", "End_enzymes")
@@ -56,7 +54,11 @@ get_table <- function(input, seqx, dfx, cutdf, searchdf) {
 		# reading Enzyme table
 		df <- data.frame(do.call(rbind, lapply( stringr::str_split_1(input$tab, "\n"), FUN=function(x){stringr::str_split_1(x, "\t")}  )))
 		names(df) <- unname(unlist(df[1,]))
-		dfx( df[setdiff( seq_len(nrow(df)), 1),] )
+		df <- df[setdiff( seq_len(nrow(df)), 1),]
+		df <- rbind( c("None_end", 0, nchar(seqx())), df)
+		df <- rbind( c("None_start", 0, 0), df)
+		rownames(df) <- 1:nrow(df)
+		dfx( df )
 		searchdf(NULL)
 		cutdf(NULL)
 		}
@@ -67,7 +69,7 @@ search_table <- function(input, dfx, seqx, searchdf) {
 		# getiing information far all ezymes
 		charcl <- stringr::str_split(dfx()[[3]], " ")
 		#charcl <- lapply(charcl, as.numeric)
-		charcl <- lapply(charcl, FUN = function(x) { c( 1, as.numeric(x), lns) } )
+		charcl <- lapply(charcl, FUN = function(x) { as.numeric(x) } )
 		
 		names(charcl) <- dfx()[[1]]
 		# making a cleavage-site-to-enzyme lookup dict
@@ -82,11 +84,12 @@ search_table <- function(input, dfx, seqx, searchdf) {
 		
 		# combing result to table
 		df <- do.call( rbind, lapply(names(xx), FUN=function(x) { if (dim(xx[[x]])[[1]] > 0) { d <- data.frame(xx[[x]]); d[["Peptide"]] <- x; return(d) }  } ) )
-		
+		df[["start"]] <- df[["start"]] - 1
 		df[["Start_Enzymes"]] <- apply(df["start"], MARGIN = 1, FUN = function(x) {paste(g[[as.character(x)]], collapse = ";")} )
 		df[["End_enzymes"]] <- apply(df["end"], MARGIN = 1, FUN = function(x) {paste(g[[as.character(x)]], collapse = ";")} )
 		
 		names(df) <- c("Start", "End", "Peptide", "Start_Enzymes", "End_enzymes")
+		df <- df[complete.cases(df),]
 		searchdf( df[c("Peptide", "Start", "End", "Start_Enzymes", "End_enzymes")])
 		}
 

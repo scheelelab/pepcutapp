@@ -29,33 +29,37 @@ ui <- fluidPage(theme = shinytheme("darkly"),
                             
                             tabPanel("PepCut", value = "tab0")),
 	
-	fluidRow(
-		column(1),
-		column(2, align = "left",
-			actionButton("back", "HOW GO BACK", class = "btn btn-warning btn-lg btn-block")
-		),
-		column(6),
-		column(2, align = "right",
-			actionButton("forw", "HOW GO FORWARD", class = "btn btn-warning btn-lg btn-block")
-		),
-		column(1),
-	),
+	#fluidRow(
+	#	column(1),
+	#	column(2, align = "left",
+	#		actionButton("back", "HOW GO BACK", class = "btn btn-warning btn-lg btn-block")
+	#	),
+	#	column(6),
+	#	column(2, align = "right",
+	#		actionButton("forw", "HOW GO FORWARD", class = "btn btn-warning btn-lg btn-block")
+	#	),
+	#	column(1),
+	#),
 	
 	
-	fluidRow(
-				column(1, style="background-color:#404971; height:100%;"),
-				column(10,
-				
-					tags$iframe(src = "https://web.expasy.org/peptide_cutter/", seamless=F, width="100%", height="800px", id="ifr", style="background-color:#FFFFFF")
-				),
-				column(1, style="background-color:#404971; height:100%;")
-	),
+	#fluidRow(
+	#			column(1, style="background-color:#404971; height:100%;"),
+	#			column(10,
+	#			
+	#				tags$iframe(src = "https://web.expasy.org/peptide_cutter/", seamless=F, width="100%", height="800px", id="ifr", style="background-color:#FFFFFF")
+	#			),
+	#			column(1, style="background-color:#404971; height:100%;")
+	#),
 	
 	fluidRow(
 				column(2),
-				column(8, align = "center",
+				column(8, #align = "center",
+					h1("Welcome to the PepCut app"),
+					HTML("<h2>1. Navigate to <a href='https://web.expasy.org/peptide_cutter/' target='_blank'>https://web.expasy.org/peptide_cutter/</a><h2>"),
+					HTML("<h2>2. Copy the <a href=# id='showimg1' class='action-button shiny-bound-input'>Protein sequence table </a> and the <a href=# id='showimg2' class='action-button shiny-bound-input'>Protease cleavage table</a> to the text fields below.</h2>"),
+					br(),
+					h4("When using this service, please remember to cite 'https://web.expasy.org/peptide_cutter/' and '<info_will_come>'")
 					
-					HTML("<h2>Copy the <a href=# id='showimg1' class='action-button shiny-bound-input'>Protein sequence table </a> and the <a href=# id='showimg2' class='action-button shiny-bound-input'>Protease cleavage table</a> to the text fields below.</h2>"),
 				),
 				column(2)
 			),
@@ -144,7 +148,7 @@ ui <- fluidPage(theme = shinytheme("darkly"),
 				column(10, align = "center",
 				hr(),
 				h4("Look up petides"),
-				p("Inster"),
+				#p("Inster"),
 				textAreaInput("search", "Insert comma seperated peptides", width="80%", height="200px", placeholder = "HAHAHA,KVKVGVN,RDGRGALQNIIPASTGAAKAV"),
 				div(style = "overflow-y: auto; overflow-x: auto;",
 						DT::dataTableOutput("maybe")
